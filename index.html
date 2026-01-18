@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Ordem dos Assassinos</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<style>
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Arial', sans-serif;
+}
+
+body {
+  background: #000;
+  color: #fff;
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+
+/* FUNDO COM GRADIENTE ESCURO */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(circle at center, #111 0%, #000 100%);
+  z-index: -1;
+}
+
+/* ========== TELA INICIAL ========== */
+#entry {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  text-align: center;
+  width: 100%;
+}
+
+#entry span {
+  font-size: 1.8rem;
+  color: #b51f1f;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  text-shadow: 0 0 10px #ff0000, 0 0 20px #ff0000;
+  margin-bottom: 20px;
+  animation: textGlow 2.5s infinite; /* MAIS LENTO */
+  font-weight: bold;
+}
+
+/* SÍMBOLO INICIAL */
+#entrySymbol {
+  width: 120px;
+  height: 120px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 20px #b51f1f);
+  animation: symbolBeat 2.5s infinite; /* MAIS LENTO */
+}
+
+/* ========== CONTEÚDO PRINCIPAL ========== */
+#core {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+}
+
+/* CONTAINER CENTRAL - ALTAR, EZIO E SÍMBOLO */
+#mainContent {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 80px;
+  width: 90%;
+  max-width: 1200px;
+  opacity: 0;
+}
+
+/* PERSONAGENS */
+.assassin {
+  width: 280px;
+  text-align: center;
+  opacity: 0;
+}
+
+.assassin img {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+  object-position: top;
+  border-radius: 10px;
+  filter: grayscale(100%) brightness(0.8);
+  transition: all 0.5s ease;
+  box-shadow: 0 0 20px rgba(181, 31, 31, 0.3);
+}
+
+.assassin:hover img {
+  filter: grayscale(0%) brightness(1);
+  transform: scale(1.02);
+  box-shadow: 0 0 30px rgba(255, 0, 0, 0.5);
+}
+
+.assassin h3 {
+  margin-top: 15px;
+  font-size: 1.3rem;
+  color: #fff;
+  text-shadow: 0 0 5px #ff0000;
+  letter-spacing: 2px;
+}
+
+.assassin p {
+  font-size: 0.9rem;
+  color: #aaa;
+  margin-top: 5px;
+  font-style: italic;
+}
+
+/* SÍMBOLO CENTRAL */
+#centralSymbol {
+  width: 180px;
+  height: 180px;
+  object-fit: contain;
+  filter: drop-shadow(0 0 15px #ff0000) drop-shadow(0 0 25px #b51f1f);
+  opacity: 0;
+}
+
+/* TEXTO DE FRASES - FONTE ALTERADA PARA 'TIMES NEW ROMAN' */
+#quote {
+  position: absolute;
+  bottom: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.4rem;
+  color: #ffffff;
+  text-shadow: 0 0 3px #ffffff;
+  text-align: center;
+  width: 80%;
+  max-width: 800px;
+  opacity: 0;
+  min-height: 40px;
+  letter-spacing: 1px;
+  font-family: 'Times New Roman', Times, serif; /* FONTE ALTERADA */
+  font-style: italic; /* ITÁLICO ADICIONADO */
+}
+
+/* RODAPÉ - TEXTO ALTERADO */
+#tag {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1rem;
+  color: #b51f1f;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  opacity: 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-shadow: 0 0 5px #ff0000;
+  font-weight: bold;
+}
+
+#tag:hover {
+  color: #ff3a3a;
+  transform: translateX(-50%) scale(1.05);
+  text-shadow: 0 0 10px #ff0000;
+}
+
+/* ========== ANIMAÇÕES ========== */
+@keyframes symbolBeat {
+  0%, 100% { 
+    transform: scale(1);
+    filter: drop-shadow(0 0 10px #ff0000) drop-shadow(0 0 20px #b51f1f);
+  }
+  50% { 
+    transform: scale(1.05);
+    filter: drop-shadow(0 0 15px #ff3a3a) drop-shadow(0 0 25px #ff0000);
+  }
+}
+
+@keyframes textGlow {
+  0%, 100% { 
+    text-shadow: 0 0 5px #b51f1f, 0 0 10px #ff0000;
+  }
+  50% { 
+    text-shadow: 0 0 10px #ff3a3a, 0 0 20px #ff0000;
+  }
+}
+
+@keyframes fadeIn {
+  to { opacity: 1; }
+}
+
+@keyframes slideInFromLeft {
+  from {
+    transform: translateX(-200px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(200px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes riseSymbol {
+  0% { 
+    transform: translateY(0) scale(1) rotate(0deg);
+    opacity: 1;
+  }
+  100% { 
+    transform: translateY(-100vh) scale(0) rotate(360deg);
+    opacity: 0;
+  }
+}
+
+/* CURSOR PISCANTE - AGORA EM BRANCO */
+#quote::after {
+  content: '▌';
+  animation: cursorBlink 1s infinite;
+  margin-left: 5px;
+  color: #ffffff;
+  font-weight: bold;
+}
+
+@keyframes cursorBlink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<!-- TELA INICIAL -->
+<div id="entry">
+  <span>Click To Enter</span>
+  <img id="entrySymbol" 
+       src="https://raw.githubusercontent.com/hazard-bio/music/main/assassins-creed-a-logo-transparent-png-514476-removebg-preview.png" 
+       alt="Símbolo dos Assassinos">
+</div>
+
+<!-- CONTEÚDO PRINCIPAL -->
+<div id="core">
+  <div id="mainContent">
+    <!-- ALTAÏR -->
+    <div class="assassin" id="altair">
+      <img src="https://raw.githubusercontent.com/hazard-bio/music/main/6b1ba41a3bfe35cfb6bd41e9158e04f0-removebg-preview.png" 
+           alt="Altaïr Ibn-La'Ahad">
+      <h3>Altaïr Ibn-La'Ahad</h3>
+      <p>Reformador do Credo</p>
+    </div>
+    
+    <!-- SÍMBOLO CENTRAL -->
+    <img id="centralSymbol" 
+         src="https://raw.githubusercontent.com/hazard-bio/music/main/assassins-creed-a-logo-transparent-png-514476-removebg-preview.png" 
+         alt="Símbolo dos Assassinos">
+    
+    <!-- EZIO -->
+    <div class="assassin" id="ezio">
+      <img src="https://raw.githubusercontent.com/hazard-bio/music/main/d7734b132a3b4c0c6497e6837139e467-removebg-preview%20(1).png" 
+           alt="Ezio Auditore">
+      <h3>Ezio Auditore</h3>
+      <p>Mentor da Ordem</p>
+    </div>
+  </div>
+  
+  <!-- TEXTO DE FRASES -->
+  <div id="quote"></div>
+  
+  <!-- RODAPÉ - TEXTO ALTERADO -->
+  <div id="tag">Quer saber mais? Clique aqui</div>
+</div>
+
+<!-- MÚSICA -->
+<audio id="bgm" loop preload="auto">
+  <source src="https://raw.githubusercontent.com/hazard-bio/music/main/ytmp3free.cc_assassins-creed-2-ost-jesper-kyd-ezios-family-track-03-youtubemp3free.org.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// ========== ELEMENTOS ==========
+const entry = document.getElementById("entry");
+const entrySymbol = document.getElementById("entrySymbol");
+const core = document.getElementById("core");
+const mainContent = document.getElementById("mainContent");
+const centralSymbol = document.getElementById("centralSymbol");
+const altair = document.getElementById("altair");
+const ezio = document.getElementById("ezio");
+const quoteElement = document.getElementById("quote");
+const tagElement = document.getElementById("tag");
+const music = document.getElementById("bgm");
+
+// ========== CONFIGURAÇÕES ==========
+music.volume = 0.35;
+
+// ========== SISTEMA DE FRASES ==========
+const quotes = [
+  "Nada é verdade, tudo é permitido",
+  "O silêncio é a arma do sábio",
+  "Siga o caminho da sombra",
+  "Presença sem ser notado",
+  "O tempo molda o destino",
+  "A paciência é nossa força",
+  "Na escuridão encontramos a luz",
+  "A lâmina esconde a verdade",
+  "Somos os guardiões do equilíbrio"
+];
+
+let currentQuote = 0;
+let charIndex = 0;
+let isDeleting = false;
+let isTyping = true;
+// VELOCIDADE DO TEXTO - MANTIDA COMO ESTAVA
+let typeSpeed = 90;
+let deleteSpeed = 50;
+
+function typeQuote() {
+  if (!isTyping) return;
+  
+  const text = quotes[currentQuote];
+  
+  if (!isDeleting) {
+    // DIGITANDO - VELOCIDADE MÉDIA (MANTIDA)
+    quoteElement.textContent = text.substring(0, charIndex + 1);
+    charIndex++;
+    
+    if (charIndex === text.length) {
+      // Pausa no final - MANTIDA
+      isDeleting = true;
+      setTimeout(() => {
+        typeQuote();
+      }, 3000);
+      return;
+    }
+    
+    setTimeout(typeQuote, typeSpeed);
+  } else {
+    // APAGANDO - VELOCIDADE MÉDIA (MANTIDA)
+    quoteElement.textContent = text.substring(0, charIndex - 1);
+    charIndex--;
+    
+    if (charIndex === 0) {
+      // Mudar para próxima frase
+      isDeleting = false;
+      currentQuote = (currentQuote + 1) % quotes.length;
+      // Pequena pausa - MANTIDA
+      setTimeout(() => {
+        typeQuote();
+      }, 1000);
+      return;
+    }
+    
+    setTimeout(typeQuote, deleteSpeed);
+  }
+}
+
+// ========== EVENTO DE CLIQUE ==========
+entry.onclick = () => {
+  // Tocar música
+  music.play().catch(() => {
+    console.log("Clique para ativar som");
+  });
+  
+  // Remover animação do texto
+  entry.querySelector("span").style.animation = 'none';
+  entry.querySelector("span").style.opacity = '0';
+  entry.querySelector("span").style.transition = 'opacity 0.5s';
+  
+  // Animar símbolo para cima - MAIS LENTO
+  entrySymbol.style.animation = 'riseSymbol 2.5s forwards'; // MAIS LENTO (era 1.5s)
+  
+  // Esperar animação
+  setTimeout(() => {
+    entry.style.display = 'none';
+    core.style.display = 'block';
+    
+    // Fade in do conteúdo principal - MANTIDO
+    setTimeout(() => {
+      mainContent.style.opacity = '1';
+      mainContent.style.transition = 'opacity 0.8s';
+      
+      // PRIMEIRO: Símbolo central aparece - MANTIDO
+      setTimeout(() => {
+        centralSymbol.style.opacity = '1';
+        centralSymbol.style.transition = 'opacity 0.8s';
+        
+        // Iniciar texto das frases
+        setTimeout(() => {
+          quoteElement.style.opacity = '1';
+          quoteElement.style.transition = 'opacity 0.8s';
+          
+          // Iniciar sistema de frases
+          setTimeout(() => {
+            typeQuote();
+          }, 300);
+          
+        }, 300);
+        
+        // SEGUNDO: Altair aparece vindo da esquerda - MANTIDO
+        setTimeout(() => {
+          altair.style.opacity = '1';
+          altair.style.animation = 'slideInFromLeft 1s forwards';
+          
+          // TERCEIRO: Ezio aparece vindo da direita - MANTIDO
+          setTimeout(() => {
+            ezio.style.opacity = '1';
+            ezio.style.animation = 'slideInFromRight 1s forwards';
+            
+            // Mostrar rodapé - MANTIDO
+            setTimeout(() => {
+              tagElement.style.opacity = '1';
+              tagElement.style.transition = 'opacity 0.8s';
+            }, 300);
+            
+          }, 700);
+          
+        }, 1000);
+        
+      }, 200);
+      
+    }, 50);
+    
+  }, 2500); // MAIS LENTO (era 1500)
+};
+
+// ========== INTERAÇÃO COM PERSONAGENS ==========
+[altair, ezio].forEach(char => {
+  char.addEventListener('mouseenter', () => {
+    // Efeito sutil no texto
+    const title = char.querySelector('h3');
+    title.style.color = '#ff3a3a';
+    title.style.transition = 'color 0.3s';
+  });
+  
+  char.addEventListener('mouseleave', () => {
+    const title = char.querySelector('h3');
+    title.style.color = '#fff';
+  });
+});
+
+// ========== CLIQUE NO "QUER SABER MAIS?" ==========
+tagElement.addEventListener('click', () => {
+  // Coloque seu link aqui
+  window.open('https://pt.wikipedia.org/wiki/Assassin%27s_Creed', '_blank');
+});
+
+// Efeito hover no "Quer saber mais?"
+tagElement.addEventListener('mouseenter', () => {
+  tagElement.style.textDecoration = 'underline';
+});
+
+tagElement.addEventListener('mouseleave', () => {
+  tagElement.style.textDecoration = 'none';
+});
+</script>
+</body>
+</html>
